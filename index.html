@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10111b">
+<title>Rohit AI - Smart Chatbot</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #10111b;
+  --panel: #181a28;
+  --panel2: #202235;
+  --text: #f5f5ff;
+  --muted: #a1a4bd;
+  --accent: #8b5cf6;
+  --accent2: #6d5dfc;
+  --border: rgba(255,255,255,.09);
+}
+
+body {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100dvh;
+  overflow: hidden;
+}
+
+button, input, textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app {
+  display: flex;
+  height: 100dvh;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 265px;
+  background: #141521;
+  border-right: 1px solid var(--border);
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 5px 7px 15px;
+}
+
+.logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 23px;
+  background: linear-gradient(135deg,#a855f7,#536dfe);
+  box-shadow: 0 5px 24px #7950ed40;
+}
+
+.brand h2 {
+  font-size: 19px;
+}
+
+.brand p {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.new-chat {
+  padding: 13px;
+  background: linear-gradient(120deg,#8b5cf6,#6656f6);
+  color: white;
+  border: 0;
+  border-radius: 12px;
+  text-align: left;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.new-chat:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.side-label {
+  font-size: 11px;
+  color: var(--muted);
+  padding: 12px 8px 0;
+  letter-spacing: 1.3px;
+}
+
+.side-item {
+  color: #d5d6e8;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: .2s;
+}
+
+.side-item:hover {
+  background: var(--panel2);
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+
+.key-status {
+  color: var(--muted);
+  font-size: 12px;
+  padding: 10px 7px;
+}
+
+/* MAIN */
+
+.main {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.topbar {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 27px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(16,17,27,.92);
+}
+
+.topbar h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.model-badge {
+  font-size: 11px;
+  color: #c7b7ff;
+  background: #8b5cf61b;
+  border: 1px solid #8b5cf640;
+  padding: 8px 11px;
+  border-radius: 20px;
+}
+
+.icon-btn {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: white;
+  border-radius: 10px;
+  padding: 9px 12px;
+}
+
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 35px 18px 24px;
+  scroll-behavior: smooth;
+}
+
+.chat-inner {
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.welcome {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0 35px;
+}
+
+.welcome-icon {
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  border-radius: 25px;
+  font-size: 37px;
+  background: linear-gradient(135deg,#8b5cf629,#4f46e529);
+  border: 1px solid #8b5cf650;
+  margin-bottom: 23px;
+}
+
+.welcome h1 {
+  font-size: clamp(26px,4vw,39px);
+  letter-spacing: -1px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg,#b38aff,#71a7ff);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.welcome p {
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.7;
+  font-size: 14px;
+  max-width: 430px;
+}
+
+.suggestions {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 12px;
+  width: 100%;
+  margin-top: 32px;
+}
+
+.suggestion {
+  padding: 16px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 14px;
+  transition: .2s;
+}
+
+.suggestion:hover {
+  background: var(--panel2);
+  border-color: #8b5cf680;
+  transform: translateY(-2px);
+}
+
+.suggestion strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 7px;
+}
+
+.suggestion span {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* MESSAGES */
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  padding-bottom: 20px;
+}
+
+.message {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  animation: appear .25s ease;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 17px;
+  background: var(--panel2);
+}
+
+.message.user .avatar {
+  background: #4f46e5;
+}
+
+.message-body {
+  min-width: 0;
+  flex: 1;
+}
+
+.message-name {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 4px 0 10px;
+  color: #d8d6f5;
+}
+
+.message-text {
+  font-size: 14px;
+  line-height: 1.85;
+  color: #e3e4f2;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.message-text code {
+  background: #080a12;
+  padding: 3px 5px;
+  border-radius: 5px;
+  font-family: Consolas, monospace;
+}
+
+.message-text pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 14px;
+  background: #090b14;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin: 10px 0;
+  overflow-x: auto;
+}
+
+.typing {
+  display: flex;
+  gap: 5px;
+  padding: 9px 0;
+}
+
+.typing span {
+  width: 7px;
+  height: 7px;
+  background: #a78bfa;
+  border-radius: 50%;
+  animation: bounce .8s infinite alternate;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: .2s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: .4s;
+}
+
+@keyframes bounce {
+  to {
+    transform: translateY(-6px);
+    opacity: .45;
+  }
+}
+
+/* COMPOSER */
+
+.composer-wrap {
+  padding: 12px 18px 15px;
+  background: linear-gradient(transparent,var(--bg) 20%);
+}
+
+.composer-inner {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  background: #1b1d2c;
+  border: 1px solid #34364e;
+  border-radius: 19px;
+  padding: 12px;
+  transition: border .2s, box-shadow .2s;
+}
+
+.composer:focus-within {
+  border-color: #8b5cf6a0;
+  box-shadow: 0 0 0 3px #8b5cf615;
+}
+
+#prompt {
+  width: 100%;
+  resize: none;
+  max-height: 170px;
+  min-height: 28px;
+  outline: none;
+  border: 0;
+  background: transparent;
+  color: white;
+  line-height: 1.6;
+  font-size: 14px;
+  padding: 3px 2px;
+}
+
+#prompt::placeholder {
+  color: #8b8da8;
+}
+
+.send-btn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg,#9b5cf6,#6655f5);
+  color: white;
+  font-size: 21px;
+  display: grid;
+  place-items: center;
+  transition: .2s;
+}
+
+.send-btn:hover {
+  filter: brightness(1.16);
+}
+
+.send-btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.disclaimer {
+  text-align: center;
+  color: #777991;
+  font-size: 10px;
+  margin-top: 10px;
+}
+
+/* API KEY MODAL */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: #05050bc9;
+  backdrop-filter: blur(8px);
+  z-index: 10;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal {
+  width: 100%;
+  max-width: 430px;
+  padding: 26px;
+  background: #1a1c2b;
+  border: 1px solid #363850;
+  border-radius: 20px;
+  box-shadow: 0 25px 100px #0008;
+}
+
+.modal h2 {
+  font-size: 22px;
+  margin-bottom: 9px;
+}
+
+.modal-desc {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.modal label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 8px;
+  color: #dddaf8;
+}
+
+.input-row {
+  display: flex;
+  gap: 7px;
+}
+
+.modal input {
+  min-width: 0;
+  width: 100%;
+  background: #10111b;
+  border: 1px solid #393b52;
+  color: white;
+  padding: 12px;
+  border-radius: 10px;
+  outline: none;
+}
+
+.modal input:focus {
+  border-color: var(--accent);
+}
+
+.primary-btn {
+  border: 0;
+  background: linear-gradient(120deg,#8b5cf6,#6556f6);
+  color: white;
+  border-radius: 10px;
+  padding: 12px 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.secondary-btn {
+  margin-top: 10px;
+  width: 100%;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: #d7d8ed;
+  border-radius: 10px;
+  padding: 11px;
+}
+
+.security-note {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f59e0b10;
+  border: 1px solid #f59e0b40;
+  color: #f5d9a3;
+  border-radius: 10px;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.error-note {
+  color: #fca5a5;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 12px;
+  display: none;
+}
+
+.toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #292b40;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 17px;
+  font-size: 12px;
+  z-index: 20;
+  display: none;
+  max-width: 90%;
+}
+
+@media(max-width:700px) {
+  .sidebar {
+    display: none;
+  }
+
+  .topbar {
+    height: 60px;
+    padding: 0 14px;
+  }
+
+  .chat-area {
+    padding: 22px 15px;
+  }
+
+  .welcome {
+    justify-content: center;
+  }
+
+  .welcome h1 {
+    font-size: 28px;
+  }
+
+  .welcome p {
+    font-size: 13px;
+  }
+
+  .suggestions {
+    grid-template-columns: 1fr;
+    gap: 9px;
+    margin-top: 24px;
+  }
+
+  .suggestion {
+    padding: 13px;
+  }
+
+  .composer-wrap {
+    padding: 8px 10px 12px;
+  }
+
+  .model-badge {
+    font-size: 10px;
+    padding: 7px 8px;
+  }
+
+  .messages {
+    gap: 22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">✦</div>
+      <div>
+        <h2>Rohit AI</h2>
+        <p>YOUR SMART AI ASSISTANT</p>
+      </div>
+    </div>
+
+    <button class="new-chat" id="newChat">＋ &nbsp; New Chat</button>
+
+    <div class="side-label">WORKSPACE</div>
+    <div class="side-item" id="newChatSide">✧ &nbsp; नई बातचीत</div>
+    <div class="side-item" id="clearChat">⌫ &nbsp; चैट साफ करें</div>
+    <div class="side-item" id="openSettings">⚙ &nbsp; Groq API सेटिंग्स</div>
+
+    <div class="sidebar-bottom">
+      <div class="side-item" id="helpBtn">ⓘ &nbsp; मदद</div>
+      <div class="key-status" id="keyStatus">● API Key सेट नहीं है</div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <h3>✦ AI Assistant</h3>
+      <div class="top-actions">
+        <span class="model-badge">⚡ Groq AI</span>
+        <button class="icon-btn" id="settingsTop" aria-label="Settings">⚙</button>
+      </div>
+    </header>
+
+    <section class="chat-area" id="chatArea">
+      <div class="chat-inner">
+
+        <div class="welcome" id="welcome">
+          <div class="welcome-icon">✦</div>
+
+          <h1>नमस्ते! <span class="gradient-text">मैं Rohit AI हूँ</span></h1>
+
+          <p>
+            मैं तुम्हारी पढ़ाई, कोडिंग, वेबसाइट और दूसरे सवालों में
+            मदद कर सकता हूँ। आज क्या सीखना चाहते हो?
+          </p>
+
+          <div class="suggestions">
+
+            <button class="suggestion" data-prompt="मुझे HTML और CSS से एक सुंदर वेबसाइट बनाना सिखाओ।">
+              <strong>💻 वेबसाइट बनाओ</strong>
+              <span>HTML, CSS और JavaScript सीखो</span>
+            </button>
+
+            <button class="suggestion" data-prompt="मुझे कक्षा 9 की पढ़ाई के लिए एक अच्छा टाइमटेबल बनाकर दो।">
+              <strong>📚 पढ़ाई में मदद</strong>
+              <span>पढ़ाई और टाइमटेबल की सहायता</span>
+            </button>
+
+            <button class="suggestion" data-prompt="मुझे Python में एक आसान AI प्रोजेक्ट का कोड समझाओ।">
+              <strong>🤖 AI प्रोजेक्ट</strong>
+              <span>नया AI प्रोजेक्ट बनाना सीखो</span>
+            </button>
+
+            <button class="suggestion" data-prompt="मुझे एक मजेदार JavaScript गेम बनाने का आइडिया दो।">
+              <strong>🎮 गेम बनाओ</strong>
+              <span>गेम के आइडिया और कोड</span>
+            </button>
+
+          </div>
+        </div>
+
+        <div class="messages" id="messages"></div>
+
+      </div>
+    </section>
+
+    <div class="composer-wrap">
+      <div class="composer-inner">
+
+        <form class="composer" id="chatForm">
+          <textarea
+            id="prompt"
+            placeholder="यहाँ अपना सवाल लिखें..."
+            rows="1"
+            aria-label="अपना सवाल लिखें"
+          ></textarea>
+
+          <button class="send-btn" id="sendBtn" type="submit" aria-label="Send">
+            ↑
+          </button>
+        </form>
+
+        <div class="disclaimer">
+          AI कभी-कभी गलत जवाब दे सकता है। महत्वपूर्ण जानकारी जाँचें।
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- SETTINGS MODAL -->
+
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+
+    <h2>⚙ Groq AI सेटिंग्स</h2>
+
+    <p class="modal-desc">
+      अपनी Groq API Key डालकर AI से बातचीत शुरू करें।
+      Key पाने के लिए Groq का आधिकारिक Console इस्तेमाल करें।
+    </p>
+
+    <label for="apiKey">Groq API Key</label>
+
+    <div class="input-row">
+      <input
+        type="password"
+        id="apiKey"
+        placeholder="gsk_..."
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <button class="primary-btn" type="button" id="toggleKey">देखें</button>
+    </div>
+
+    <div class="security-note">
+      ⚠️ सुरक्षा: यह डेमो Key को केवल इस ब्राउज़र के
+      sessionStorage में रखता है। फिर भी ब्राउज़र से API
+      इस्तेमाल करने पर Key पूरी तरह सुरक्षित नहीं होती।
+      इसे सार्वजनिक वेबसाइट पर इस्तेमाल न करें।
+    </div>
+
+    <p class="error-note" id="modalError"></p>
+
+    <button class="primary-btn" id="saveKey" style="width:100%;margin-top:17px">
+      Key सेट करें
+    </button>
+
+    <button class="secondary-btn" id="closeModal">
+      वापस जाएँ
+    </button>
+
+    <button class="secondary-btn" id="removeKey">
+      Key हटाएँ
+    </button>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+const API_URL = "https://api.groq.com/openai/v1/chat/completions";
+const MODEL = "llama-3.3-70b-versatile";
+
+const $ = (id) => document.getElementById(id);
+
+let apiKey = "";
+let conversation = [];
+let busy = false;
+let requestController = null;
+
+try {
+  apiKey = sessionStorage.getItem("rohit_ai_groq_key") || "";
+} catch (_) {
+  apiKey = "";
+}
+
+function showToast(message) {
+  const toast = $("toast");
+  toast.textContent = message;
+  toast.style.display = "block";
+
+  clearTimeout(showToast.timer);
+
+  showToast.timer = setTimeout(() => {
+    toast.style.display = "none";
+  }, 3000);
+}
+
+function updateKeyStatus() {
+  $("keyStatus").textContent = apiKey
+    ? "● Groq Key सेट है"
+    : "● API Key सेट नहीं है";
+}
+
+function openSettings() {
+  $("modalError").style.display = "none";
+  $("apiKey").value = apiKey;
+  $("settingsModal").classList.add("show");
+}
+
+function closeSettings() {
+  $("settingsModal").classList.remove("show");
+}
+
+function saveKey() {
+  const value = $("apiKey").value.trim();
+
+  if (!value) {
+    $("modalError").textContent = "पहले अपनी Groq API Key डालें।";
+    $("modalError").style.display = "block";
+    return;
+  }
+
+  if (!value.startsWith("gsk_")) {
+    $("modalError").textContent =
+      "API Key का प्रारूप सही नहीं लग रहा। अपनी Groq Key जाँचें।";
+    $("modalError").style.display = "block";
+    return;
+  }
+
+  try {
+    sessionStorage.setItem("rohit_ai_groq_key", value);
+  } catch (_) {
+    $("modalError").textContent =
+      "ब्राउज़र में sessionStorage उपलब्ध नहीं है।";
+    $("modalError").style.display = "block";
+    return;
+  }
+
+  apiKey = value;
+  updateKeyStatus();
+  closeSettings();
+  showToast("API Key इस ब्राउज़र सत्र के लिए सेट हो गई।");
+}
+
+function removeKey() {
+  apiKey = "";
+
+  try {
+    sessionStorage.removeItem("rohit_ai_groq_key");
+  } catch (_) {}
+
+  $("apiKey").value = "";
+  updateKeyStatus();
+  closeSettings();
+  showToast("API Key हटा दी गई।");
+}
+
+function newChat() {
+  if (busy && requestController) {
+    requestController.abort();
+  }
+
+  busy = false;
+  conversation = [];
+
+  $("messages").replaceChildren();
+  $("welcome").style.display = "flex";
+  $("prompt").value = "";
+  $("sendBtn").disabled = false;
+  $("sendBtn").textContent = "↑";
+
+  $("prompt").focus();
+}
+
+function addMessage(role, content) {
+  $("welcome").style.display = "none";
+
+  const message = document.createElement("div");
+  message.className = "message " + role;
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = role === "user" ? "👤" : "✦";
+
+  const body = document.createElement("div");
+  body.className = "message-body";
+
+  const name = document.createElement("div");
+  name.className = "message-name";
+  name.textContent = role === "user" ? "तुम" : "Rohit AI";
+
+  const text = document.createElement("div");
+  text.className = "message-text";
+  text.textContent = content;
+
+  body.append(name, text);
+  message.append(avatar, body);
+
+  $("messages").appendChild(message);
+  scrollToBottom();
+
+  return text;
+}
+
+function showTyping() {
+  $("welcome").style.display = "none";
+
+  const row = document.createElement("div");
+  row.className = "message";
+  row.id = "typingIndicator";
+
+  const avatar = document.createElement("div");
+  avatar.className = "avatar";
+  avatar.textContent = "✦";
+
+  const body = document.createElement("div");
+  body.className = "message-body";
+
+  const name = document.createElement("div");
+  name.className = "message-name";
+  name.textContent = "Rohit AI जवाब लिख रहा है...";
+
+  const dots = document.createElement("div");
+  dots.className = "typing";
+
+  for (let i = 0; i < 3; i++) {
+    dots.appendChild(document.createElement("span"));
+  }
+
+  body.append(name, dots);
+  row.append(avatar, body);
+
+  $("messages").appendChild(row);
+  scrollToBottom();
+}
+
+function scrollToBottom() {
+  const area = $("chatArea");
+
+  requestAnimationFrame(() => {
+    area.scrollTop = area.scrollHeight;
+  });
+}
+
+async function sendMessage(text) {
+  text = text.trim();
+
+  if (!text || busy) return;
+
+  if (!apiKey) {
+    openSettings();
+    showToast("पहले Groq API Key सेट करें।");
+    return;
+  }
+
+  busy = true;
+  $("sendBtn").disabled = true;
+
+  $("prompt").value = "";
+  $("prompt").style.height = "auto";
+
+  addMessage("user", text);
+
+  conversation.push({
+    role: "user",
+    content: text
+  });
+
+  showTyping();
+
+  requestController = new AbortController();
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + apiKey
+      },
+
+      body: JSON.stringify({
+        model: MODEL,
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are Rohit AI, a helpful assistant. " +
+              "Reply in the user's language, preferably Hindi " +
+              "when the user writes in Hindi. Explain coding " +
+              "clearly and politely."
+          },
+          ...conversation.slice(-20)
+        ],
+        temperature: 0.7,
+        max_tokens: 1500
+      }),
+
+      signal: requestController.signal
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      const apiMessage =
+        data.error && data.error.message
+          ? data.error.message
+          : "HTTP " + response.status;
+
+      if (response.status === 401 || response.status === 403) {
+        throw new Error(
+          "API Key गलत है या अनुमति नहीं है। Groq Key जाँचें।"
+        );
+      }
+
+      if (response.status === 429) {
+        throw new Error(
+          "Groq की Rate Limit या उपलब्ध कोटा पूरा हो सकता है। बाद में कोशिश करें।"
+        );
+      }
+
+      throw new Error(apiMessage);
+    }
+
+    const answer =
+      data.choices &&
+      data.choices[0] &&
+      data.choices[0].message &&
+      data.choices[0].message.content;
+
+    if (!answer) {
+      throw new Error("AI से जवाब नहीं मिला। दोबारा कोशिश करें।");
+    }
+
+    conversation.push({
+      role: "assistant",
+      content: answer
+    });
+
+    $("typingIndicator")?.remove();
+    addMessage("assistant", answer);
+
+  } catch (error) {
+    $("typingIndicator")?.remove();
+
+    if (error.name === "AbortError") {
+      return;
+    }
+
+    const message = error.message || "अज्ञात त्रुटि";
+
+    addMessage(
+      "assistant",
+      "माफ़ करना, जवाब प्राप्त नहीं हो सका।\n\n" +
+      "समस्या: " + message +
+      "\n\nअपनी API Key, इंटरनेट कनेक्शन और Groq API उपलब्धता जाँचें।"
+    );
+
+  } finally {
+    busy = false;
+    requestController = null;
+    $("sendBtn").disabled = false;
+    $("sendBtn").textContent = "↑";
+    $("prompt").focus();
+  }
+}
+
+$("chatForm").addEventListener("submit", (event) => {
+  event.preventDefault();
+  sendMessage($("prompt").value);
+});
+
+$("prompt").addEventListener("input", () => {
+  const input = $("prompt");
+  input.style.height = "auto";
+  input.style.height = Math.min(input.scrollHeight, 170) + "px";
+});
+
+$("prompt").addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    $("chatForm").requestSubmit();
+  }
+});
+
+document.querySelectorAll("[data-prompt]").forEach((button) => {
+  button.addEventListener("click", () => {
+    $("prompt").value = button.dataset.prompt;
+    $("prompt").focus();
+    $("prompt").dispatchEvent(new Event("input"));
+  });
+});
+
+$("newChat").addEventListener("click", newChat);
+$("newChatSide").addEventListener("click", newChat);
+
+$("clearChat").addEventListener("click", () => {
+  newChat();
+  showToast("चैट साफ हो गई।");
+});
+
+$("openSettings").addEventListener("click", openSettings);
+$("settingsTop").addEventListener("click", openSettings);
+$("closeModal").addEventListener("click", closeSettings);
+$("saveKey").addEventListener("click", saveKey);
+$("removeKey").addEventListener("click", removeKey);
+
+$("toggleKey").addEventListener("click", () => {
+  const field = $("apiKey");
+  const showing = field.type === "text";
+
+  field.type = showing ? "password" : "text";
+  $("toggleKey").textContent = showing ? "देखें" : "छिपाएँ";
+});
+
+$("settingsModal").addEventListener("click", (event) => {
+  if (event.target === $("settingsModal")) {
+    closeSettings();
+  }
+});
+
+$("helpBtn").addEventListener("click", () => {
+  showToast(
+    "सेटिंग्स खोलें, Groq API Key डालें और फिर अपना सवाल भेजें।"
+  );
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeSettings();
+});
+
+updateKeyStatus();
+</script>
+
+</body>
+</html>
